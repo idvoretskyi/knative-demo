@@ -6,13 +6,7 @@ A brief and small demo of [KNative](https://github.com/knative/) - the [Kubernet
 Installing KNative
 ------------------
 
-### Minikube
-
-[Minikube](https://github.com/kubernetes/minikube/) is a tool, developed by Kubernetes community for deploying the ready-to-use single-node Kubernetes cluster locally.
-
-### Google Kubernetes Engine (GKE)
-
-TBD
+The instructions on how to install KNative are available in the official [KNative repo](https://github.com/knative/docs/tree/master/install).
 
 Deploying Applications
 ----------------------
