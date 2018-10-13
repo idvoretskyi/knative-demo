@@ -96,9 +96,17 @@ spec:
 
 ### Building and deploying
 
--	Build the container image locally docker build -t gcr.io/${KNATIVE_PROJECT}/helloworld-go .
+-	Build the container image locally:
 
--	Push it to the remote registry docker push gcr.io/${KNATIVE_PROJECT}/helloworld-go
+```shell
+    docker build -t gcr.io/${KNATIVE_PROJECT}/helloworld-go .
+```
+
+-	Push it to the remote registry:
+
+```shell
+    docker push gcr.io/${KNATIVE_PROJECT}/helloworld-go
+```
 
 -	Apply the configuration
 
