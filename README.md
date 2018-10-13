@@ -99,40 +99,40 @@ spec:
 -	Build the container image locally:
 
 ```shell
-    docker build -t gcr.io/${KNATIVE_PROJECT}/helloworld-go .
+docker build -t gcr.io/${KNATIVE_PROJECT}/helloworld-go .
 ```
 
 -	Push it to the remote registry:
 
 ```shell
-    docker push gcr.io/${KNATIVE_PROJECT}/helloworld-go
+docker push gcr.io/${KNATIVE_PROJECT}/helloworld-go
 ```
 
 -	Apply the configuration
 
 ```
-    kubectl apply --filename service.yaml
+kubectl apply --filename service.yaml
 ```
 
 -	Find the IP address of your service (and export it as a system variable):
 
 ```
-    kubectl get svc knative-ingressgateway --namespace istio-system
-    export IP_ADDRESS=$(kubectl get svc knative-ingressgateway --namespace istio-system --output 'jsonpath={.status.loadBalancer.ingress[0].ip}')
+kubectl get svc knative-ingressgateway --namespace istio-system
+export IP_ADDRESS=$(kubectl get svc knative-ingressgateway --namespace istio-system --output 'jsonpath={.status.loadBalancer.ingress[0].ip}')
 ```
 
 -	Find the URL of your service (and export it as a system variable):
 
 ```
-    kubectl get services.serving.knative.dev helloworld-go  --output=custom-columns=NAME:.metadata.name,DOMAIN:.status.domain
-    export HOST_URL=$(kubectl get services.serving.knative.dev helloworld-go  --output jsonpath='{.status.domain}')
+kubectl get services.serving.knative.dev helloworld-go  --output=custom-columns=NAME:.metadata.name,DOMAIN:.status.domain
+export HOST_URL=$(kubectl get services.serving.knative.dev helloworld-go  --output jsonpath='{.status.domain}')
 ```
 
 -	Request the app and see the results:
 
 ```shell
-    curl -H "Host: ${HOST_URL}" http://${IP_ADDRESS}
-    Hello World: Go Sample v1!
+curl -H "Host: ${HOST_URL}" http://${IP_ADDRESS}
+Hello World: Go Sample v1!
 ```
 
 *Based on the official [Knative documentation](https://github.com/knative/docs/blob/master/serving/samples/helloworld-go/README.md), licensed under the [Creative Commons Attribution 4.0 License](https://creativecommons.org/licenses/by/4.0/), and code samples are licensed under the [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0)*
