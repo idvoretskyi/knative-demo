@@ -9,7 +9,7 @@ spec:
       revisionTemplate:
         spec:
           container:
-            image: gcr.io/knative-samples/helloworld-go # The URL to the image of the app
+            image: gcr.io/idvoretskyi/helloworld-go # The URL to the image of the app
             env:
             - name: TARGET # The environment variable printed out by the sample app
               value: "Go Sample v1"
