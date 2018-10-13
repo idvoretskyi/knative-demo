@@ -8,7 +8,7 @@ Installing Knative
 
 The instructions on how to install KNative are available in the official [Knative repo](https://github.com/knative/docs/tree/master/install).
 
-Alternatively, you may install Knative on GKE (Google Kubernetes Engine) just running the [install-knative-gke.sh](install-knative-gke.sh) script, available in this repo, or just copy and paste the following to your shell (use carefully!):
+Alternatively, you may install Knative on GKE (Google Kubernetes Engine) just running the [install-knative-gke.sh](scripts/install-knative-gke.sh) script, available in this repo, or just copy and paste the following to your shell (use carefully!):
 
 ```
 curl -sSL https://raw.githubusercontent.com/idvoretskyi/knative-demo/master/install-knative-gke.sh | bash -x
