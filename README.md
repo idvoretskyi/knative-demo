@@ -98,32 +98,31 @@ Deploying Applications
 
 ### Building and deploying
 
-- Build the container image locally 
-docker build -t gcr.io/${KNATIVE_PROJECT}/helloworld-go .
+-	Build the container image locally docker build -t gcr.io/${KNATIVE_PROJECT}/helloworld-go .
 
-- Push it to the remote registry
-docker push gcr.io/${KNATIVE_PROJECT}/helloworld-go
+-	Push it to the remote registry docker push gcr.io/${KNATIVE_PROJECT}/helloworld-go
 
-- Apply the configuration
+-	Apply the configuration
 
 ```
     kubectl apply --filename service.yaml
 ```
 
-- Find the IP address of your service (and export it as a system variable):
+-	Find the IP address of your service (and export it as a system variable):
 
 ```
     kubectl get svc knative-ingressgateway --namespace istio-system
     export IP_ADDRESS=$(kubectl get svc knative-ingressgateway --namespace istio-system --output 'jsonpath={.status.loadBalancer.ingress[0].ip}')
 ```
-- Find the URL of your service (and export it as a system variable):
+
+-	Find the URL of your service (and export it as a system variable):
 
 ```
     kubectl get services.serving.knative.dev helloworld-go  --output=custom-columns=NAME:.metadata.name,DOMAIN:.status.domain
     export HOST_URL=$(kubectl get services.serving.knative.dev helloworld-go  --output jsonpath='{.status.domain}')
 ```
 
-- Request the app and see the results:
+-	Request the app and see the results:
 
 ```shell
     curl -H "Host: ${HOST_URL}" http://${IP_ADDRESS}
