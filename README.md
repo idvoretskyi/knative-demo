@@ -19,4 +19,113 @@ PS. This script will create a 3-node Kubernetes cluster on GKE with the *n1-stan
 Deploying Applications
 ----------------------
 
-TBD
+*Based on the official [Knative documentation](https://github.com/knative/docs/blob/master/serving/samples/helloworld-go/README.md)*
+
+### Hello World Sample
+
+-	Create a new file named `helloworld.go` and paste the following code. This code creates a basic web server which listens on port 8080:
+
+	```go
+	package main
+
+	import (
+		"flag"
+		"fmt"
+		"log"
+		"net/http"
+		"os"
+	)
+
+	func handler(w http.ResponseWriter, r *http.Request) {
+		log.Print("Hello world received a request.")
+		target := os.Getenv("TARGET")
+		if target == "" {
+			target = "World"
+		}
+		fmt.Fprintf(w, "Hello %s!\n", target)
+	}
+
+	func main() {
+		flag.Parse()
+		log.Print("Hello world sample started.")
+
+		http.HandleFunc("/", handler)
+		http.ListenAndServe(":8080", nil)
+	}
+	```
+
+-	Create a `Dockerfile` with the following contents:
+
+	```docker
+	# Start from a Debian image with the latest version of Go installed
+	# and a workspace (GOPATH) configured at /go.
+	FROM golang
+
+	# Copy the local package files to the container's workspace.
+	ADD . /go/src/github.com/knative/docs/helloworld
+
+	# Build the helloworld command inside the container.
+	# (You may fetch or manage dependencies here,
+	# either manually or with a tool like "godep".)
+	RUN go install github.com/knative/docs/helloworld
+
+	# Run the helloworld command by default when the container starts.
+	ENTRYPOINT /go/bin/helloworld
+
+	# Document that the service listens on port 8080.
+	EXPOSE 8080
+	```
+
+-	Create a service.yaml file with the following contents:
+
+```yaml
+	apiVersion: serving.knative.dev/v1alpha1 # Current version of Knative
+	kind: Service
+	metadata:
+	  name: helloworld-go # The name of the app
+	  namespace: default # The namespace the app will use
+	spec:
+	  runLatest:
+	    configuration:
+	      revisionTemplate:
+	        spec:
+	          container:
+	            image: gcr.io/$KNATIVE_PROJECT/helloworld-go # The URL to the image of the app
+	            env:
+	            - name: TARGET # The environment variable printed out by the sample app
+	              value: "Go Sample v1"
+```
+
+### Building and deploying
+
+- Build the container image locally 
+docker build -t gcr.io/${KNATIVE_PROJECT}/helloworld-go .
+
+- Push it to the remote registry
+docker push gcr.io/${KNATIVE_PROJECT}/helloworld-go
+
+- Apply the configuration
+
+```
+    kubectl apply --filename service.yaml
+```
+
+- Find the IP address of your service (and export it as a system variable):
+
+```
+    kubectl get svc knative-ingressgateway --namespace istio-system
+    export IP_ADDRESS=$(kubectl get svc knative-ingressgateway --namespace istio-system --output 'jsonpath={.status.loadBalancer.ingress[0].ip}')
+```
+- Find the URL of your service (and export it as a system variable):
+
+```
+    kubectl get services.serving.knative.dev helloworld-go  --output=custom-columns=NAME:.metadata.name,DOMAIN:.status.domain
+    export HOST_URL=$(kubectl get services.serving.knative.dev helloworld-go  --output jsonpath='{.status.domain}')
+```
+
+- Request the app and see the results:
+
+```shell
+    curl -H "Host: ${HOST_URL}" http://${IP_ADDRESS}
+    Hello World: Go Sample v1!
+```
