@@ -52,7 +52,7 @@ Deploying Applications
 	}
 	```
 
--	Create a `Dockerfile` with the following contents:
+	-	Create a `Dockerfile` with the following contents:
 
 	```docker
 	# Start from a Debian image with the latest version of Go installed
@@ -110,23 +110,23 @@ docker push gcr.io/${KNATIVE_PROJECT}/helloworld-go
 
 -	Apply the configuration
 
-```
-kubectl apply --filename service.yaml
-```
+	```
+	kubectl apply --filename service.yaml
+	```
 
 -	Find the IP address of your service (and export it as a system variable):
 
-```
-kubectl get svc knative-ingressgateway --namespace istio-system
-export IP_ADDRESS=$(kubectl get svc knative-ingressgateway --namespace istio-system --output 'jsonpath={.status.loadBalancer.ingress[0].ip}')
-```
+	```
+	kubectl get svc knative-ingressgateway --namespace istio-system
+	export IP_ADDRESS=$(kubectl get svc knative-ingressgateway --namespace istio-system --output 'jsonpath={.status.loadBalancer.ingress[0].ip}')
+	```
 
 -	Find the URL of your service (and export it as a system variable):
 
-```
-kubectl get services.serving.knative.dev helloworld-go  --output=custom-columns=NAME:.metadata.name,DOMAIN:.status.domain
-export HOST_URL=$(kubectl get services.serving.knative.dev helloworld-go  --output jsonpath='{.status.domain}')
-```
+	```
+	kubectl get services.serving.knative.dev helloworld-go  --output=custom-columns=NAME:.metadata.name,DOMAIN:.status.domain
+	export HOST_URL=$(kubectl get services.serving.knative.dev helloworld-go  --output jsonpath='{.status.domain}')
+	```
 
 -	Request the app and see the results:
 
